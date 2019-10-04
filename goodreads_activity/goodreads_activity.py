@@ -12,15 +12,16 @@ from __future__ import unicode_literals
 
 import logging
 
-logger = logging.getLogger(__name__)
-
 from pelican import signals
+
+logger = logging.getLogger(__name__)
 
 
 class GoodreadsActivity:
-    def __init__(self, generator, shelf=None):
+    def __init__(self, generator):
         import feedparser
 
+        """
         if generator.settings["GOODREADS_ACTIVITY_FEED"]:
             activity_shelf = feedparser.parse(
                 generator.settings["GOODREADS_ACTIVITY_FEED"]
@@ -30,6 +31,11 @@ class GoodreadsActivity:
                 generator.settings["GOODREADS_ACTIVITY_BASE"] + shelf
             )
         self.activities = feedparser.parse(activity_shelf)
+        """
+
+        self.activities = feedparser.parse(
+            generator.settings["GOODREADS_ACTIVITY_FEED"]
+        )
 
     def fetch(self):
         goodreads_activity = {
@@ -73,7 +79,7 @@ def initialize_feedparser(generator):
     generator.goodreads = GoodreadsActivity(generator)
 
 
-def register(shelf=None):
+def register():
     try:
         signals.article_generator_init.connect(initialize_feedparser)
         signals.article_generator_context.connect(fetch_goodreads_activity)
