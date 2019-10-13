@@ -15,7 +15,13 @@ import logging
 from pelican import signals
 
 logger = logging.getLogger(__name__)
-logger.basicConfig(level=logging.DEBUG)
+ch = logging.StreamHandler()
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+ch.setFormatter(formatter)
+logger.handlers = [ch]
+logger.setLevel(logging.DEBUG)
 
 
 class GoodreadsActivity:
