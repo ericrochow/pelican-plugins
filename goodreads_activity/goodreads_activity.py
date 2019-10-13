@@ -15,6 +15,7 @@ import logging
 from pelican import signals
 
 logger = logging.getLogger(__name__)
+logger.basicConfig(level=logging.DEBUG)
 
 
 class GoodreadsActivity:
@@ -67,14 +68,14 @@ def fetch_goodreads_activity(gen, metadata):
         "GOODREADS_ACTIVITY_BASE" in gen.settings
         and "GOODREADS_SHELVES" in gen.settings
     ):
-        logger.debug("Trying to grab all specified shelves."
-                     logger.debug("Settings: %s", gen.settings)
+        logger.debug("Trying to grab all specified shelves.")
+        logger.debug("Settings: %s", gen.settings)
         base = gen.settings["GOODREADS_ACTIVITY_BASE"]
         logger.debug("Base: %s", base)
         shelves = gen.settings["GOODREADS_SHELVES"]
         logger.debug("Shelves: %s", shelves)
         gen.context["goodreads_activity"] = []
-        logger.debug("ACTIVITY: %s", gen.context["goodreads_activity"]
+        logger.debug("ACTIVITY: %s", gen.context["goodreads_activity"])
         for shelf in shelves:
             gen.settings["GOODREADS_ACTIVITY_FEED"] = base + shelf
             logger.debug(
@@ -82,7 +83,7 @@ def fetch_goodreads_activity(gen, metadata):
                 gen.settings["GOODREADS_ACTIVITY_FEED"],
             )
             gen.context["goodreads_activity"].append(gen.goodreads.fetch())
-            logger.debug("ACTIVITY: %s", gen.context["goodreads_activity"]
+            logger.debug("ACTIVITY: %s", gen.context["goodreads_activity"])
     elif "GOODREADS_ACTIVITY_FEED" in gen.settings:
         logger.debug("Grabbing activity for single specified feed")
         gen.context["goodreads_activity"] = gen.goodreads.fetch()
@@ -97,7 +98,7 @@ def register():
     try:
         logger.debug("Initializing feedparser")
         signals.article_generator_init.connect(initialize_feedparser)
-        logger.debug(("Fetching activity")
+        logger.debug("Fetching activity")
         signals.article_generator_context.connect(fetch_goodreads_activity)
     except ImportError:
         logger.warning(
